@@ -26,4 +26,15 @@ public class Path {
 	public PathQuality getPathQuality() {
 		return pathQuality;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("x: %d; y: %d; %6.2f%% lost; wins: %d; ties: %d; loses: %d; total paths: %d",
+			this.getCoordinate().getX(), this.getCoordinate().getY(),
+            this.getPathQuality().getLostPercent(),
+            this.getPathQuality().getWinCount(),
+			this.getPathQuality().getTieCount(),
+			this.getPathQuality().getLostCount(),
+			this.getPathQuality().getPathCount());
+	}
 }

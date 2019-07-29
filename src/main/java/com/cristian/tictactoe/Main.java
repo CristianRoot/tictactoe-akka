@@ -24,23 +24,14 @@ public class Main {
 		final ActorSystem system = ActorSystem.create("tictactoe");
 		final ActorRef gameService = system.actorOf(GameService.props(), "game-service");
 
-		Board board = Board.empty()
-						   .putChip(new Cell(Chip.X, new Coordinate(1, 1)))
-						   .putChip(new Cell(Chip.O, new Coordinate(0, 0)));
+		Board board = Board.empty().putChip(new Cell(Chip.O, new Coordinate(1, 1)));
 
 		FiniteDuration duration = Duration.create(10, TimeUnit.HOURS);
 		PathQualityResponse result = Await.result(
 				ask(gameService, new PathQualityRequest(0L, board, Chip.X), new Timeout(duration))
 						.mapTo(classTag(PathQualityResponse.class)), duration);
 
-		result.getPathList()
-			  .forEach(path -> System.out.println(String.format("x: %d; y: %d; %6.2f%% lost; wins: %d; ties: %d; loses: %d; total paths: %d",
-																path.getCoordinate().getX(), path.getCoordinate().getY(),
-																path.getPathQuality().getLostPercent(),
-																path.getPathQuality().getWinCount(),
-																path.getPathQuality().getTieCount(),
-																path.getPathQuality().getLostCount(),
-																path.getPathQuality().getPathCount())));
+		result.getPathList().forEach(System.out::println);
 		System.out.println("Time: " + result.getTimeInMills() + "ms");
 
 		Await.ready(system.terminate(), Duration.Inf());

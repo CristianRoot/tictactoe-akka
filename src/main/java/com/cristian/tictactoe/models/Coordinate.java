@@ -32,4 +32,9 @@ public class Coordinate {
 		return Objects.hash(x, y);
 	}
 
+	@Override
+	public String toString() {
+		return String.format("x: %d; y: %d;", this.x, this.y);
+	}
+
 }
