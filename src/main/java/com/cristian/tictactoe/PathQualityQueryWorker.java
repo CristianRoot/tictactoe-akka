@@ -5,14 +5,10 @@ import akka.actor.OneForOneStrategy;
 import akka.actor.Props;
 import akka.actor.SupervisorStrategy;
 import akka.japi.pf.DeciderBuilder;
-import com.cristian.tictactoe.exceptions.PathCalculationError;
-import com.cristian.tictactoe.models.Board;
+import com.cristian.tictactoe.exceptions.PathCalculationErrorException;
+import com.cristian.tictactoe.models.*;
 import com.cristian.tictactoe.models.Board.Cell;
-import com.cristian.tictactoe.models.Chip;
-import com.cristian.tictactoe.models.Coordinate;
-import com.cristian.tictactoe.models.GameResult;
-import com.cristian.tictactoe.models.Path;
-import com.cristian.tictactoe.models.PathQuality;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,9 +39,9 @@ public class PathQualityQueryWorker extends AbstractLoggingActor {
     @Override
     public SupervisorStrategy supervisorStrategy() {
         return new OneForOneStrategy(false,
-            DeciderBuilder.match(PathCalculationError.class, pathCalculationError -> {
-                log().error("Unexpected failure calculating the path ({}), restarting worker...",
-                    pathCalculationError.getPath().getCoordinate());
+            DeciderBuilder.match(PathCalculationErrorException.class, pathCalculationErrorException -> {
+                log().debug("Unexpected failure calculating the path ({}), restarting worker...",
+							pathCalculationErrorException.getPath().getCoordinate());
                 return SupervisorStrategy.restart();
             }).matchAny(error -> SupervisorStrategy.escalate()).build());
     }
@@ -80,8 +76,8 @@ public class PathQualityQueryWorker extends AbstractLoggingActor {
                 pathList.add(path);
 
                 // Randomly fails to check how the supervision strategy works
-                if (Math.random() > 0.98) {
-                    throw new PathCalculationError(path);
+                if (Math.random() > 0.99998) {
+                    throw new PathCalculationErrorException(path);
                 }
 
                 if (pendingWorkers == 0) {
