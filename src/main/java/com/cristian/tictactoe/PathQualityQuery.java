@@ -16,8 +16,7 @@ import java.util.List;
 public class PathQualityQuery extends AbstractLoggingActor {
 
 	public static Props props(long requestId, ActorRef requester, Board board, Chip winningPlayer) {
-		return Props.create(PathQualityQuery.class,
-							() -> new PathQualityQuery(requestId, requester, board, winningPlayer));
+		return Props.create(PathQualityQuery.class, requestId, requester, board, winningPlayer);
 	}
 
 	public static class PathQualityResponse {

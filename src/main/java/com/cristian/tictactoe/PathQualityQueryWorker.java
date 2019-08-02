@@ -16,8 +16,7 @@ import java.util.stream.Collectors;
 public class PathQualityQueryWorker extends AbstractLoggingActor {
 
 	public static Props props(Board board, Coordinate myPosition, Chip myChip, Chip winningPlayer) {
-		return Props.create(PathQualityQueryWorker.class,
-							() -> new PathQualityQueryWorker(board, myPosition, myChip, winningPlayer));
+		return Props.create(PathQualityQueryWorker.class, board, myPosition, myChip, winningPlayer);
 	}
 
 	private final Board board;
