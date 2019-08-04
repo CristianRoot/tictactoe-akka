@@ -69,23 +69,24 @@ public class PathQualityQueryWorker extends AbstractLoggingActor {
 
 	@Override
 	public Receive createReceive() {
-		return receiveBuilder()
-				.match(Path.class, path -> {
-					pendingWorkers--;
-					pathList.add(path);
+		return receiveBuilder().match(Path.class, this::onPath).build();
+	}
 
-					// Randomly fails to check how the supervision strategy works
-					if (Math.random() > 0.99998) {
-						throw new PathCalculationErrorException(path);
-					}
+	private void onPath(Path path) throws PathCalculationErrorException {
+		pendingWorkers--;
+		pathList.add(path);
 
-					if (pendingWorkers == 0) {
-						getContext().getParent().tell(
-								new Path(myPosition, pathList.stream().map(Path::getPathQuality).collect(Collectors.toList())),
-								getSelf());
-						getContext().stop(getSelf());
-					}
-				}).build();
+		// Randomly fails to check how the supervision strategy works
+		if (Math.random() > 0.99998) {
+			throw new PathCalculationErrorException(path);
+		}
+
+		if (pendingWorkers == 0) {
+			getContext().getParent().tell(
+					new Path(myPosition, pathList.stream().map(Path::getPathQuality).collect(Collectors.toList())),
+					getSelf());
+			getContext().stop(getSelf());
+		}
 	}
 
 	private boolean imWinning() {

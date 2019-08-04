@@ -93,18 +93,18 @@ public class PathQualityQuery extends AbstractLoggingActor {
 
 	@Override
 	public Receive createReceive() {
-		return receiveBuilder()
-				.match(Path.class, path -> {
-					pathList.add(path);
-					pendingWorkers--;
+		return receiveBuilder().match(Path.class, this::onPath).build();
+	}
 
-					if (pendingWorkers == 0) {
-						pathList.sort(Comparator.comparingDouble(a -> a.getPathQuality().getLostCount()));
-						requester.tell(new PathQualityResponse(requestId, pathList, System.currentTimeMillis() - initialTime), getSelf());
-						getContext().stop(getSelf());
-					}
-				})
-				.build();
+	private void onPath(Path path) {
+		pathList.add(path);
+		pendingWorkers--;
+
+		if (pendingWorkers == 0) {
+			pathList.sort(Comparator.comparingDouble(a -> a.getPathQuality().getLostCount()));
+			requester.tell(new PathQualityResponse(requestId, pathList, System.currentTimeMillis() - initialTime), getSelf());
+			getContext().stop(getSelf());
+		}
 	}
 
 }

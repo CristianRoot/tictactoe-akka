@@ -47,16 +47,18 @@ public class GameService extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-            .match(PathQualityRequest.class, pathQualityRequest -> {
-                Props pathQualityQueryProps =
-                    PathQualityQuery.props(pathQualityRequest.requestId,
+            .match(PathQualityRequest.class, this::onPathQualityRequest)
+            .build();
+    }
+
+    private void onPathQualityRequest(PathQualityRequest pathQualityRequest) {
+        Props pathQualityQueryProps =
+                PathQualityQuery.props(pathQualityRequest.requestId,
                         getSender(),
                         pathQualityRequest.getBoard(),
                         pathQualityRequest.getWinningPlayer());
 
-                getContext().actorOf(pathQualityQueryProps, "path-quality-query-" + pathQualityRequest.getRequestId());
-            })
-            .build();
+        getContext().actorOf(pathQualityQueryProps, "path-quality-query-" + pathQualityRequest.getRequestId());
     }
 
 }
