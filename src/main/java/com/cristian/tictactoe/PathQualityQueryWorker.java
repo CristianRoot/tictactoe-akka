@@ -15,16 +15,16 @@ import java.util.stream.Collectors;
 
 public class PathQualityQueryWorker extends AbstractLoggingActor {
 
-	public static Props props(Board board, Coordinate myPosition, Chip myChip, Chip winningPlayer) {
-		return Props.create(PathQualityQueryWorker.class, board, myPosition, myChip, winningPlayer);
-	}
-
 	private final Board board;
 	private final Coordinate myPosition;
 	private final Chip myChip;
 	private final Chip winningPlayer;
 	private final List<Path> pathList;
 	private long pendingWorkers;
+
+	public static Props props(Board board, Coordinate myPosition, Chip myChip, Chip winningPlayer) {
+		return Props.create(PathQualityQueryWorker.class, board, myPosition, myChip, winningPlayer);
+	}
 
 	public PathQualityQueryWorker(Board board, Coordinate myPosition, Chip myChip, Chip winningPlayer) {
 		this.board = board.putChip(new Cell(myChip, myPosition));
