@@ -4,7 +4,7 @@ public enum Chip {
 	O, X;
 
 	public Chip reverse() {
-		if(this.equals(O))
+		if (this.equals(O))
 			return X;
 		else
 			return O;

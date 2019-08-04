@@ -10,55 +10,53 @@ import com.cristian.tictactoe.models.Chip;
 
 public class GameService extends AbstractLoggingActor {
 
-    public static Props props() {
-        return Props.create(GameService.class, GameService::new);
-    }
+	public static Props props() {
+		return Props.create(GameService.class, GameService::new);
+	}
 
-    public static class PathQualityRequest {
+	public static class PathQualityRequest {
 
-        private final long requestId;
-        private final Board board;
-        private final Chip winningPlayer;
+		private final long requestId;
+		private final Board board;
+		private final Chip winningPlayer;
 
-        public PathQualityRequest(long requestId, Board board, Chip winningPlayer) {
-            this.requestId = requestId;
-            this.board = board;
-            this.winningPlayer = winningPlayer;
-        }
+		public PathQualityRequest(long requestId, Board board, Chip winningPlayer) {
+			this.requestId = requestId;
+			this.board = board;
+			this.winningPlayer = winningPlayer;
+		}
 
-        public long getRequestId() {
-            return requestId;
-        }
+		public long getRequestId() {
+			return requestId;
+		}
 
-        public Board getBoard() {
-            return board;
-        }
+		public Board getBoard() {
+			return board;
+		}
 
-        public Chip getWinningPlayer() {
-            return winningPlayer;
-        }
-    }
+		public Chip getWinningPlayer() {
+			return winningPlayer;
+		}
+	}
 
-    @Override
-    public SupervisorStrategy supervisorStrategy() {
-        return new OneForOneStrategy(false, DeciderBuilder.matchAny(error -> SupervisorStrategy.stop()).build());
-    }
+	@Override
+	public SupervisorStrategy supervisorStrategy() {
+		return new OneForOneStrategy(false, DeciderBuilder.matchAny(error -> SupervisorStrategy.stop()).build());
+	}
 
-    @Override
-    public Receive createReceive() {
-        return receiveBuilder()
-            .match(PathQualityRequest.class, this::onPathQualityRequest)
-            .build();
-    }
+	@Override
+	public Receive createReceive() {
+		return receiveBuilder().match(PathQualityRequest.class, this::onPathQualityRequest).build();
+	}
 
-    private void onPathQualityRequest(PathQualityRequest pathQualityRequest) {
-        Props pathQualityQueryProps =
-                PathQualityQuery.props(pathQualityRequest.requestId,
-                        getSender(),
-                        pathQualityRequest.getBoard(),
-                        pathQualityRequest.getWinningPlayer());
+	private void onPathQualityRequest(PathQualityRequest pathQualityRequest) {
+		Props pathQualityQueryProps =
+				PathQualityQuery.props(pathQualityRequest.requestId,
+				                       getSender(),
+				                       pathQualityRequest.getBoard(),
+				                       pathQualityRequest.getWinningPlayer());
 
-        getContext().actorOf(pathQualityQueryProps, "path-quality-query-" + pathQualityRequest.getRequestId());
-    }
+		getContext().actorOf(pathQualityQueryProps, "path-quality-query-" + pathQualityRequest.getRequestId());
+	}
 
 }

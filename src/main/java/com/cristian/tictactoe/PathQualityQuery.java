@@ -65,14 +65,14 @@ public class PathQualityQuery extends AbstractLoggingActor {
 	@Override
 	public SupervisorStrategy supervisorStrategy() {
 		return new OneForOneStrategy(false,
-									 DeciderBuilder.match(PathCalculationErrorException.class, pathCalculationErrorException -> {
-										 log().debug("Unexpected failure calculating the path ({}), restarting worker...",
-													 pathCalculationErrorException.getPath().getCoordinate());
-										 return SupervisorStrategy.restart();
-									 }).matchAny(error -> {
-										 requester.tell(new Status.Failure(error), getSelf());
-										 return SupervisorStrategy.escalate();
-									 }).build());
+		                             DeciderBuilder.match(PathCalculationErrorException.class, pathCalculationErrorException -> {
+			                             log().debug("Unexpected failure calculating the path ({}), restarting worker...",
+			                                         pathCalculationErrorException.getPath().getCoordinate());
+			                             return SupervisorStrategy.restart();
+		                             }).matchAny(error -> {
+			                             requester.tell(new Status.Failure(error), getSelf());
+			                             return SupervisorStrategy.escalate();
+		                             }).build());
 	}
 
 	@Override
@@ -83,11 +83,11 @@ public class PathQualityQuery extends AbstractLoggingActor {
 		} else {
 			this.pendingWorkers =
 					board.getContent()
-						 .stream()
-						 .filter(Cell::isEmpty)
-						 .map(Cell::getCoordinate)
-						 .peek(coordinate -> getContext().actorOf(PathQualityQueryWorker.props(board, coordinate, winningPlayer, winningPlayer)))
-						 .count();
+					     .stream()
+					     .filter(Cell::isEmpty)
+					     .map(Cell::getCoordinate)
+					     .peek(coordinate -> getContext().actorOf(PathQualityQueryWorker.props(board, coordinate, winningPlayer, winningPlayer)))
+					     .count();
 		}
 	}
 

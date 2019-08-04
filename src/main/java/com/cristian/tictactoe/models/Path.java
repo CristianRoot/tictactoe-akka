@@ -14,9 +14,9 @@ public class Path {
 	public Path(Coordinate coordinate, List<PathQuality> pathQualityList) {
 		this.coordinate = coordinate;
 		this.pathQuality = new PathQuality(pathQualityList.stream().mapToInt(PathQuality::getPathCount).sum(),
-										   pathQualityList.stream().mapToInt(PathQuality::getWinCount).sum(),
-										   pathQualityList.stream().mapToInt(PathQuality::getTieCount).sum(),
-										   pathQualityList.stream().mapToInt(PathQuality::getLostCount).sum());
+		                                   pathQualityList.stream().mapToInt(PathQuality::getWinCount).sum(),
+		                                   pathQualityList.stream().mapToInt(PathQuality::getTieCount).sum(),
+		                                   pathQualityList.stream().mapToInt(PathQuality::getLostCount).sum());
 	}
 
 	public Coordinate getCoordinate() {
@@ -30,11 +30,11 @@ public class Path {
 	@Override
 	public String toString() {
 		return String.format("x: %d; y: %d; %6.2f%% lost; wins: %d; ties: %d; loses: %d; total paths: %d",
-			this.getCoordinate().getX(), this.getCoordinate().getY(),
-            this.getPathQuality().getLostPercent(),
-            this.getPathQuality().getWinCount(),
-			this.getPathQuality().getTieCount(),
-			this.getPathQuality().getLostCount(),
-			this.getPathQuality().getPathCount());
+		                     this.getCoordinate().getX(), this.getCoordinate().getY(),
+		                     this.getPathQuality().getLostPercent(),
+		                     this.getPathQuality().getWinCount(),
+		                     this.getPathQuality().getTieCount(),
+		                     this.getPathQuality().getLostCount(),
+		                     this.getPathQuality().getPathCount());
 	}
 }

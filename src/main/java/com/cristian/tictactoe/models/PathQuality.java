@@ -50,9 +50,9 @@ public class PathQuality {
 		if (o == null || getClass() != o.getClass()) return false;
 		PathQuality that = (PathQuality) o;
 		return pathCount == that.pathCount &&
-			   winCount == that.winCount &&
-			   tieCount == that.tieCount &&
-			   lostCount == that.lostCount;
+		       winCount == that.winCount &&
+		       tieCount == that.tieCount &&
+		       lostCount == that.lostCount;
 	}
 
 }

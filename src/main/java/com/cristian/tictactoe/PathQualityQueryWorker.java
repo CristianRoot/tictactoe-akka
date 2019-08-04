@@ -38,11 +38,11 @@ public class PathQualityQueryWorker extends AbstractLoggingActor {
 	@Override
 	public SupervisorStrategy supervisorStrategy() {
 		return new OneForOneStrategy(false,
-									 DeciderBuilder.match(PathCalculationErrorException.class, pathCalculationErrorException -> {
-										 log().debug("Unexpected failure calculating the path ({}), restarting worker...",
-													 pathCalculationErrorException.getPath().getCoordinate());
-										 return SupervisorStrategy.restart();
-									 }).matchAny(error -> SupervisorStrategy.escalate()).build());
+		                             DeciderBuilder.match(PathCalculationErrorException.class, pathCalculationErrorException -> {
+			                             log().debug("Unexpected failure calculating the path ({}), restarting worker...",
+			                                         pathCalculationErrorException.getPath().getCoordinate());
+			                             return SupervisorStrategy.restart();
+		                             }).matchAny(error -> SupervisorStrategy.escalate()).build());
 	}
 
 	@Override
@@ -58,11 +58,11 @@ public class PathQualityQueryWorker extends AbstractLoggingActor {
 			} else {
 				this.pendingWorkers =
 						board.getContent()
-							 .stream()
-							 .filter(Cell::isEmpty)
-							 .map(Cell::getCoordinate)
-							 .peek(coordinate -> getContext().actorOf(PathQualityQueryWorker.props(board, coordinate, myChip.reverse(), winningPlayer)))
-							 .count();
+						     .stream()
+						     .filter(Cell::isEmpty)
+						     .map(Cell::getCoordinate)
+						     .peek(coordinate -> getContext().actorOf(PathQualityQueryWorker.props(board, coordinate, myChip.reverse(), winningPlayer)))
+						     .count();
 			}
 		}
 	}
@@ -91,30 +91,30 @@ public class PathQualityQueryWorker extends AbstractLoggingActor {
 
 	private boolean imWinning() {
 		long chipsInARow = this.board.getContent()
-									 .stream()
-									 .filter(cell -> !cell.isEmpty())
-									 .filter(cell -> cell.getChip().get().equals(myChip))
-									 .filter(cell -> cell.getCoordinate().getX() == myPosition.getX())
-									 .count();
+		                             .stream()
+		                             .filter(cell -> !cell.isEmpty())
+		                             .filter(cell -> cell.getChip().get().equals(myChip))
+		                             .filter(cell -> cell.getCoordinate().getX() == myPosition.getX())
+		                             .count();
 
 		long chipsInAColumn = this.board.getContent()
-										.stream()
-										.filter(cell -> !cell.isEmpty())
-										.filter(cell -> cell.getChip().get().equals(myChip))
-										.filter(cell -> cell.getCoordinate().getY() == myPosition.getY())
-										.count();
+		                                .stream()
+		                                .filter(cell -> !cell.isEmpty())
+		                                .filter(cell -> cell.getChip().get().equals(myChip))
+		                                .filter(cell -> cell.getCoordinate().getY() == myPosition.getY())
+		                                .count();
 
 		long chipsInADiagonal = this.board.getContent()
-										  .stream()
-										  .filter(cell -> !cell.isEmpty())
-										  .filter(cell -> cell.getChip().get().equals(myChip))
-										  .filter(cell -> {
-											  Coordinate cellCoordinate = cell.getCoordinate();
-											  int xDiff = cellCoordinate.getX() - myPosition.getX();
-											  int yDiff = cellCoordinate.getY() - myPosition.getY();
-											  return Math.abs(xDiff) == Math.abs(yDiff);
-										  })
-										  .count();
+		                                  .stream()
+		                                  .filter(cell -> !cell.isEmpty())
+		                                  .filter(cell -> cell.getChip().get().equals(myChip))
+		                                  .filter(cell -> {
+			                                  Coordinate cellCoordinate = cell.getCoordinate();
+			                                  int xDiff = cellCoordinate.getX() - myPosition.getX();
+			                                  int yDiff = cellCoordinate.getY() - myPosition.getY();
+			                                  return Math.abs(xDiff) == Math.abs(yDiff);
+		                                  })
+		                                  .count();
 
 		return chipsInARow == 3 || chipsInAColumn == 3 || chipsInADiagonal == 3;
 	}

@@ -4,14 +4,14 @@ import com.cristian.tictactoe.models.Path;
 
 public class PathCalculationErrorException extends Exception {
 
-    private final Path path;
+	private final Path path;
 
-    public PathCalculationErrorException(Path path) {
-        this.path = path;
-    }
+	public PathCalculationErrorException(Path path) {
+		this.path = path;
+	}
 
-    public Path getPath() {
-        return path;
-    }
+	public Path getPath() {
+		return path;
+	}
 
 }
